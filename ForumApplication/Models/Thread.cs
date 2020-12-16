@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ForumApplication.Models
 {
-    class Thread
+    public class Thread
     {
         public int ThreadId { get; set; }
         public string ThreadName { get; set; }

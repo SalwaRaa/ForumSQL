@@ -7,5 +7,7 @@ namespace ForumApplication.Repos
     class SqliteThreadRepository
     {
         private const string _connectionString = "Data Source=.\\ForumDatabase.db";
+
+       
     }
 }

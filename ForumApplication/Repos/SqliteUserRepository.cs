@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Dapper;
+using ForumApplication.Models;
 using Microsoft.Data.Sqlite;
 
 namespace ForumApplication
@@ -11,12 +12,6 @@ namespace ForumApplication
     {
         //öppna forumdata där du står nu 
         private const string _connectionString = "Data Source=.\\ForumDatabase.db";
-
-        public void PrintVersion()
-        {
-           using var connection = new SqliteConnection(_connectionString);
-           System.Console.WriteLine(connection.ServerVersion);
-        }
 
         public List<User> GetUser()
         {
@@ -34,6 +29,5 @@ namespace ForumApplication
             using var connection = new SqliteConnection(_connectionString);
            return connection.QuerySingle<User>(sql, new { UserId = id });
         } 
-
     }
 }

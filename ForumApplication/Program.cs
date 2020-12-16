@@ -1,5 +1,7 @@
 ﻿using System;
 using Dapper;
+using ForumApplication.Models;
+
 namespace ForumApplication
 {
     class Program
@@ -10,27 +12,9 @@ namespace ForumApplication
         static void Main(string[] args)
         {
             _userRepository = new SqliteUserRepository();
-            _userRepository.PrintVersion();
-            PrintUsers();
-            PrintUserWithId(1);
+            var console = new ConsoleUI();
+            console.Run();
         }
 
-        private static void PrintUser(User user)
-        {
-            Console.WriteLine($"{user.FirstName} {user.LastName} {user.NickName}  ");
-        }
-       public static void PrintUsers()
-        {
-            var users = _userRepository.GetUser();
-            foreach (var user in users)
-            {
-                PrintUser(user);
-            }
-        }
-       public static void PrintUserWithId(int id)
-        {
-            var user = _userRepository.GetUserById(id);
-            PrintUser(user);
-        }
     }
 }

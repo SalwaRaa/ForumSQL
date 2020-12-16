@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ForumApplication.Models
 {
-    class Post
+    public class Post
     {
         public int PostId { get; }
         public string PostComment { get; set; }
