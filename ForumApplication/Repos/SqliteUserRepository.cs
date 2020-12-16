@@ -28,5 +28,12 @@ namespace ForumApplication
                 //konverterar users till en lista då users är en inumerble
                 return users.ToList();  
         }
+        public User GetUserById(int id)
+        {
+            var sql = "SELECT * FROM User WHERE UserId = @UserId";
+            using var connection = new SqliteConnection(_connectionString);
+           return connection.QuerySingle<User>(sql, new { UserId = id });
+        } 
+
     }
 }

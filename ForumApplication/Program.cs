@@ -4,20 +4,33 @@ namespace ForumApplication
 {
     class Program
     {
+        // en instans av klassen, nu slipper jag passa in den i alla metoder
+        private static SqliteUserRepository _userRepository;
+
         static void Main(string[] args)
         {
-            var repo = new SqliteUserRepository();
-            repo.PrintVersion();
-            PrintUsers(repo);
+            _userRepository = new SqliteUserRepository();
+            _userRepository.PrintVersion();
+            PrintUsers();
+            PrintUserWithId(1);
         }
-        static void PrintUsers(SqliteUserRepository repository)
+
+        private static void PrintUser(User user)
         {
-            var users = repository.GetUser();
+            Console.WriteLine($"{user.FirstName} {user.LastName} {user.NickName}  ");
+        }
+       public static void PrintUsers()
+        {
+            var users = _userRepository.GetUser();
             foreach (var user in users)
             {
-                Console.WriteLine($"{user.FirstName} {user.LastName} {user.NickName} ");
+                PrintUser(user);
             }
-
+        }
+       public static void PrintUserWithId(int id)
+        {
+            var user = _userRepository.GetUserById(id);
+            PrintUser(user);
         }
     }
 }
