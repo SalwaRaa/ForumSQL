@@ -10,30 +10,23 @@ namespace ForumApplication.Repos
 {
     class SqlitePostRepository
     {
-    private const string _connectionString = "Data Source=.\\ForumDatabase.db";
+        private const string _connectionString = "Data Source=.\\ForumDatabase.db";
 
-    public List<Post> GetPosts()
-        {
-            using var connection = new SqliteConnection(_connectionString);
-            var posts = connection.Query<Post>(" SELECT * FROM Post");
-            return posts.ToList();
-        }
-
-    public Post GetPostById(int id)
+        public Post GetPostById(int id)
         {
             using var connection = new SqliteConnection(_connectionString);
             var sql = "SELECT * FROM Post WHERE PostId = @PostId";
             return connection.QuerySingle<Post>(sql, new { PostId = id });
         }
 
-    public void AddPost(Post post)
+        public void AddPost(Post post)
         {
             using var connection = new SqliteConnection(_connectionString);
-            var sql = "INSERT INTO post (ThreadId, PostComment) VALUES (@ThreadId, @PostComment);";
+            var sql = "INSERT INTO post (ThreadId, PostComment, UserID) VALUES (@ThreadId, @PostComment, @UserId);";
             connection.Execute(sql, post);
         }
 
-    public List<Post> GetPostsFromThread(Thread thread)
+        public List<Post> GetPostsFromThread(Thread thread)
         {
             using var connection = new SqliteConnection(_connectionString);
             var sql = "SELECT * FROM post AS p " +
@@ -47,24 +40,23 @@ namespace ForumApplication.Repos
                 return post;
             },
             thread,
-            splitOn:"UserId");
+            splitOn: "UserId");
             return posts.ToList();
         }
 
-    public void DeletePost(Post post)
+        public void DeletePost(Post post)
         {
             using var connection = new SqliteConnection(_connectionString);
             var sql = "DELETE FROM post WHERE PostId = @PostId;";
             connection.Execute(sql, post);
         }
 
-    public void UpdatePost(Post post)
+        public void UpdatePost(Post post)
         {
             using var connection = new SqliteConnection(_connectionString);
-            var sql = "UPDATE FROM post WHERE PostId = @PostId;"; //userid
+            var sql = "UPDATE post SET PostComment = @PostComment WHERE PostId = @PostId;";
             connection.Execute(sql, post);
         }
-
 
     }
 }

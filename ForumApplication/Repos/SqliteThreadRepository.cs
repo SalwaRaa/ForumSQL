@@ -37,7 +37,7 @@ namespace ForumApplication.Repos
         {
             using var connection = new SqliteConnection(_connectionString);
             var sql = "INSERT INTO thread (ThreadName, ThreadText, UserId) VALUES (@ThreadName, @ThreadText, @UserId) ";
-           connection.Execute(sql, thread);
+            connection.Execute(sql, thread);
         }
     }
 }

@@ -21,21 +21,22 @@ namespace ForumApplication
 
             //Vi vill oftast arbeta med listor oftast för att kunna göra filtreringar. 
             //konverterar users till en lista då users är en inumerble
-            return users.ToList();  
+            return users.ToList();
         }
 
-      public void AddUser(User user)
+        public void AddUser(User user)
         {
             using var connection = new SqliteConnection(_connectionString);
             var sql = "INSERT INTO user (FirstName, LastName, NickName, Password) " +
                 " VALUES (@FirstName, @LastName, @NickName, @Password);";
             connection.Execute(sql, user);
         }
+
         public User GetUserById(int id)
         {
             var sql = "SELECT * FROM User WHERE UserId = @UserId";
             using var connection = new SqliteConnection(_connectionString);
-           return connection.QuerySingle<User>(sql, new { UserId = id });
-        } 
+            return connection.QuerySingle<User>(sql, new { UserId = id });
+        }
     }
 }

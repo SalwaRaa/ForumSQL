@@ -12,11 +12,14 @@ namespace ForumApplication.Models
             get { return _userId; }
             set { if (_userId == -1) _userId = value; }
         }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string NickName { get; set; }
-        public int Password { get; set; }
-        public List<Post> Posts { get; set; } = new List<Post>();
 
-    }  
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public string NickName { get; set; }
+
+        public int Password { get; set; }
+
+    }
 }

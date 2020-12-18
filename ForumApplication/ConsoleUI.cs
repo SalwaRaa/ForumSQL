@@ -6,16 +6,16 @@ using System.Text;
 
 namespace ForumApplication
 {
-     class ConsoleUI
-    {   
+    class ConsoleUI
+    {
         private SqliteUserRepository _ur = new SqliteUserRepository();
         private SqliteThreadRepository _tr = new SqliteThreadRepository();
         private SqlitePostRepository _pr = new SqlitePostRepository();
         private User _user;
-        
+
         private bool Running = true;
         private bool LogInOkay = false;
-       public void Run()
+        public void Run()
         {
             while (Running)
             {
@@ -24,44 +24,40 @@ namespace ForumApplication
                 else
                     ForumMenu();
             }
-            
         }
         private void ForumMenu()
         {
             Console.Clear();
-            Console.WriteLine("--WELCOME TO THE GAMING FORUM--");
-            Console.WriteLine("Please choose your command by typing a number ranging between 0 - 7");
-            Console.WriteLine("1): Create a user account");
-            Console.WriteLine("2): List all threads");
-            Console.WriteLine("3): List all posts in a specific thread");
-            Console.WriteLine("4): Replay with a post in a specific thread");
-            Console.WriteLine("5): Create a thread");
-            Console.WriteLine("6): Edit a post");
-            Console.WriteLine("7): Remove a post");
+            Console.WriteLine("--WELCOME TO THE FORUM--");
+            Console.WriteLine("Please choose your command by typing a number ranging between 0 - 6");
+            Console.WriteLine("1): List all threads");
+            Console.WriteLine("2): List all posts in a specific thread");
+            Console.WriteLine("3): Replay with a post in a specific thread");
+            Console.WriteLine("4): Create a thread");
+            Console.WriteLine("5): Edit a post");
+            Console.WriteLine("6): Remove a post");
             Console.WriteLine("0): Exit the app");
 
             var command = Validate.OnlyNumbers(Console.ReadLine());
             switch (command)
             {
+                
                 case "1":
-                    AddUser();
-                    break;
-                case "2":
                     ListThreads(_tr);
                     break;
-                case "3":
+                case "2":
                     ListPostInThread(_pr, _tr);
                     break;
-                case "4":
+                case "3":
                     AddPostInThread();
                     break;
-                case "5":
+                case "4":
                     AddThread();
                     break;
-                case "6":
+                case "5":
                     EditPost(_pr);
                     break;
-                case "7":
+                case "6":
                     DeletePost(_pr);
                     break;
                 case "0":
@@ -72,7 +68,7 @@ namespace ForumApplication
                     break;
             }
         }
-       
+
         private User Login()
         {
             var users = _ur.GetUser();
@@ -91,30 +87,7 @@ namespace ForumApplication
                     return user;
                 }
             }
-            return null; 
-        }
-
-        //funkar ej
-        private void AddUser()
-        {
-            var user = new User();
-
-            Console.WriteLine("Please enter you first name: ");
-            user.FirstName = Console.ReadLine();
-            user.FirstName = Validate.OnlyLetters(user.FirstName);
-
-            Console.WriteLine("Please enter you last name: ");
-            user.LastName = Console.ReadLine();
-            user.LastName = Validate.OnlyLetters(user.LastName);
-
-            Console.WriteLine("Please enter you nick name that will be displayed in the Forum: ");
-            user.NickName = Console.ReadLine();
-            user.NickName = Validate.OnlyLetters(user.NickName);
-
-            Console.WriteLine("Please enter your password: ");
-            user.Password = int.Parse(Console.ReadLine());
-            _ur.AddUser(user);
-
+            return null;
         }
 
         private void ListThreads(SqliteThreadRepository repo)
@@ -131,7 +104,7 @@ namespace ForumApplication
                 {
                     Console.WriteLine($"{t.ThreadName} | {t.ThreadText} | {t.Owner} | {t.PostCount}");
                 }
-                
+
             }
             Console.ReadKey();
         }
@@ -142,7 +115,7 @@ namespace ForumApplication
             var threadId = int.Parse(Console.ReadLine());
             var thread = tRepo.GetThreadById(threadId);
             var posts = pRepo.GetPostsFromThread(thread);
-            Console.WriteLine($"\n\"{thread.ThreadName}  \n {thread.ThreadText}\"\n[   OP  |         Comment        | ]");
+            Console.WriteLine($"\n\"{thread.ThreadName}  \n {thread.ThreadText}\"\n[   User  |          Comment          ]");
             foreach (var post in posts)
             {
                 Console.WriteLine($"{post.User.NickName} | {post.PostComment}");
@@ -150,7 +123,6 @@ namespace ForumApplication
             ReturnToMenu();
         }
 
-        //funkar ej
         private void AddThread()
         {
             var thread = new Thread();
@@ -163,6 +135,7 @@ namespace ForumApplication
             thread.ThreadText = Validate.OnlyNumberLetters(thread.ThreadText);
 
             _tr.AddThread(thread);
+            ReturnToMenu(); 
         }
 
         private void AddPostInThread()
@@ -170,39 +143,40 @@ namespace ForumApplication
             var post = new Post();
             post.UserId = _user.UserId;
             Console.WriteLine("Please enter the thread-ID you want to comment on: ");
-            post.ThreadId = int.Parse(Console.ReadLine());
+            post.ThreadId = int.Parse(Validate.OnlyNumbers(Console.ReadLine()));
             Console.WriteLine("Please enter the post comment: ");
             post.PostComment = Console.ReadLine();
             post.PostComment = Validate.OnlyNumberLetters(post.PostComment);
-            if (_user.UserId == post.UserId)
-            {
-                _pr.AddPost(post);
-            }
-                
+       
+           _pr.AddPost(post);
+            ReturnToMenu();
         }
 
         private void EditPost(SqlitePostRepository repo)
         {
             Console.Write("Please enter the post-ID you want to edit: ");
-            var postId = int.Parse(Console.ReadLine());
+            var postId = int.Parse(Validate.OnlyNumbers(Console.ReadLine()));
             var post = repo.GetPostById(postId);
-            if (_user.UserId == post.UserId) 
+            Console.Write("Please enter the change you would like to make in your post: ");
+            post.PostComment = Console.ReadLine();
+            post.PostComment = Validate.OnlyNumberLetters(post.PostComment);
+            if (_user.UserId == post.UserId)
             {
                 repo.UpdatePost(post);
             }
-               
+            ReturnToMenu();
         }
 
         private void DeletePost(SqlitePostRepository repo)
         {
             Console.Write("Please enter the post-ID you want to remove: ");
-            var postId = int.Parse(Console.ReadLine());
+            var postId = int.Parse(Validate.OnlyNumbers(Console.ReadLine()));
             var post = repo.GetPostById(postId);
             if (_user.UserId == post.UserId)
             {
                 repo.DeletePost(post);
             }
-            
+            ReturnToMenu();
         }
 
         private void ReturnToMenu()
@@ -213,25 +187,5 @@ namespace ForumApplication
                 ForumMenu();
             }
         }
-
-
-        private void PrintUser(User user)
-        {
-            Console.WriteLine($"{user.FirstName} {user.LastName} {user.NickName}  ");
-        }
-        public void PrintUsers(SqliteUserRepository _ur)
-        {
-            var users = _ur.GetUser();
-            foreach (var user in users)
-            {
-                PrintUser(user);
-            }
-        }
-        public void PrintUserWithId(int id)
-        {
-            var user = _ur.GetUserById(id);
-            PrintUser(user);
-        }
-
     }
 }

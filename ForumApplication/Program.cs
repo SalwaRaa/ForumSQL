@@ -8,8 +8,8 @@ namespace ForumApplication
     {
         static void Main(string[] args)
         {
-       var console = new ConsoleUI();
-       console.Run();
+            var console = new ConsoleUI();
+            console.Run();
         }
 
     }
