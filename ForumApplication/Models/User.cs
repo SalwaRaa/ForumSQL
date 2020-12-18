@@ -4,14 +4,19 @@ using System.Text;
 
 namespace ForumApplication.Models
 {
-   public class User
+    public class User
     {
-        public int UserId { get; }
+        private int _userId = -1;
+        public int UserId
+        {
+            get { return _userId; }
+            set { if (_userId == -1) _userId = value; }
+        }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string NickName { get; set; }
+        public int Password { get; set; }
         public List<Post> Posts { get; set; } = new List<Post>();
 
-        //public List<ForumUser> ForumUser { get; set; }
-    }
+    }  
 }

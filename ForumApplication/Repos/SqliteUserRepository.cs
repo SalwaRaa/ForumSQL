@@ -15,13 +15,21 @@ namespace ForumApplication
 
         public List<User> GetUser()
         {
-                using var connection = new SqliteConnection(_connectionString);
-                // på connectionen vill jag utföra en query. Förväntar mig att få tillbaka user
-                var users = connection.Query<User>("SELECT * FROM user");
+            using var connection = new SqliteConnection(_connectionString);
+            // på connectionen vill jag utföra en query. Förväntar mig att få tillbaka user
+            var users = connection.Query<User>("SELECT * FROM user");
 
-                //Vi vill oftast arbeta med listor oftast för att kunna göra filtreringar. 
-                //konverterar users till en lista då users är en inumerble
-                return users.ToList();  
+            //Vi vill oftast arbeta med listor oftast för att kunna göra filtreringar. 
+            //konverterar users till en lista då users är en inumerble
+            return users.ToList();  
+        }
+
+      public void AddUser(User user)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            var sql = "INSERT INTO user (FirstName, LastName, NickName, Password) " +
+                " VALUES (@FirstName, @LastName, @NickName, @Password);";
+            connection.Execute(sql, user);
         }
         public User GetUserById(int id)
         {
